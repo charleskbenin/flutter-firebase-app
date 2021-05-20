@@ -12,7 +12,7 @@ class UpdateData extends StatelessWidget {
   Widget build(BuildContext context) {
     TextEditingController titleController = TextEditingController(text: snapshots.docs[index]["title"]);
     TextEditingController desController = TextEditingController(text: snapshots.docs[index]["description"]);
-    ;
+    
 
     return AlertDialog(
       content: Column(
