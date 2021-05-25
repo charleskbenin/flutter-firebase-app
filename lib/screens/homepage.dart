@@ -32,7 +32,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     titleController = TextEditingController();
     desController = TextEditingController();
-    var id;
   }
 
   @override
