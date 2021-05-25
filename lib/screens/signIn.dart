@@ -89,16 +89,18 @@ class _SignInPageState extends State<SignInPage> {
                                     email: emailController.text,
                                     password: passController.text);
                             if (currentUser != null) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MyHomePage()));
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => MyHomePage()));
+
+                              Navigator.push(context, MaterialPageRoute(
+                                builder: (_)=> MyHomePage(userID: currentUser.user.uid,)));
                               setState(() {
                                 isLoading = false;
                               });
                             }
                           }on FirebaseAuthException catch (e) {
-                            // print(e.toString());
                             openDailog(context,e.message);
                             
                             setState(() {

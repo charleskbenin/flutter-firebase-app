@@ -72,7 +72,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MyHomePage()));
+                              builder: (context) => MyHomePage(userID: newUser.user.uid,)));
                       setState(() {
                         isLoading = false;
                       });

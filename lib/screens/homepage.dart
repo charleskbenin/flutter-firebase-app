@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app/screens/register.dart';
 import 'package:firebase_app/screens/signIn.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
+import 'register.dart';
 import '../update_data.dart';
+
+FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+final User user = auth.currentUser;
 
 
 
@@ -13,6 +17,8 @@ import '../update_data.dart';
 
 
 class MyHomePage extends StatefulWidget {
+  String userID;
+  MyHomePage({this.userID});
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -20,19 +26,21 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController titleController;
   TextEditingController desController;
+
   @override
   void initState() {
     super.initState();
     titleController = TextEditingController();
     desController = TextEditingController();
+    var id;
   }
 
-  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         actions: [
+          // Text(userEmail),
           IconButton(
             icon: Icon(Icons.logout), 
             onPressed: (){
@@ -47,13 +55,18 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
         centerTitle: true,
         title: Text('Firebase Todo'),
+        automaticallyImplyLeading: false
       ),
       body: Container(
         child: StreamBuilder<QuerySnapshot>(
-          stream: firebaseFirestore.collection("Todo").snapshots(),
+          stream: firebaseFirestore.collection(widget.userID).snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshots) {
             if (snapshots.hasData) {
-              return ListView.builder(
+              return snapshots.data.docs.isEmpty ?
+              Center(
+                child: Text("No todo..."),
+              ) :
+              ListView.builder(
                   reverse: true,
                   itemCount: snapshots.data.docs.length,
                   itemBuilder: (context, index) {
@@ -141,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (context) => AlertDialog(
               content: Column(
                 children: [
-                  Text("Add Data"),
+                  Text("Add Task"),
                   TextField(
                     controller: titleController,
                     decoration: InputDecoration(hintText: "Title here"),
@@ -152,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      firebaseFirestore.collection("Todo").add({
+                      firebaseFirestore.collection(widget.userID).add({
                         "title": titleController.text,
                         "description": desController.text,
                         "timestamp": Timestamp.now().millisecondsSinceEpoch
